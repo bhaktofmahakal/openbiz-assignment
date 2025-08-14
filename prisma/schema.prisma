@@ -1,0 +1,147 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// OTP Log table for tracking OTP requests and verifications
+model OtpLog {
+  id          Int      @id @default(autoincrement())
+  aadhaar     String   @db.VarChar(12)
+  mobile      String   @db.VarChar(10)
+  otpHash     String   @db.VarChar(255) // In production, store hashed OTP
+  expiryTime  DateTime
+  status      String   @db.VarChar(20) // SENT, VERIFIED, EXPIRED, FAILED
+  verifiedAt  DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([aadhaar, mobile])
+  @@index([status])
+  @@index([createdAt])
+  @@map("otp_logs")
+}
+
+// PAN Verification table for tracking PAN verification attempts
+model PanVerification {
+  id               Int      @id @default(autoincrement())
+  pan              String   @db.VarChar(10)
+  panHolderName    String   @db.VarChar(100)
+  dateOfBirth      DateTime @db.Date
+  status           String   @db.VarChar(20) // VERIFIED, FAILED, PENDING
+  verificationData Json?    // Store verification response data
+  errorMessage     String?  @db.Text
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([pan])
+  @@index([status])
+  @@index([createdAt])
+  @@map("pan_verifications")
+}
+
+// Form Submission table for storing complete form submissions
+model FormSubmission {
+  id             Int      @id @default(autoincrement())
+  applicationId  String   @unique @db.VarChar(50)
+  aadhaar        String   @db.VarChar(12)
+  mobile         String   @db.VarChar(10)
+  pan            String   @db.VarChar(10)
+  panHolderName  String   @db.VarChar(100)
+  dateOfBirth    DateTime @db.Date
+  status         String   @db.VarChar(20) @default("SUBMITTED") // SUBMITTED, PROCESSING, APPROVED, REJECTED
+  submissionData Json     // Store complete form data
+  submittedAt    DateTime
+  approvedAt     DateTime?
+  rejectedAt     DateTime?
+  rejectionReason String? @db.Text
+  ipAddress      String?  @db.VarChar(45) // Support IPv6
+  userAgent      String?  @db.Text
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  auditLogs AuditLog[]
+
+  @@index([applicationId])
+  @@index([aadhaar])
+  @@index([pan])
+  @@index([status])
+  @@index([submittedAt])
+  @@index([createdAt])
+  @@map("form_submissions")
+}
+
+// Audit Log table for tracking all actions and changes
+model AuditLog {
+  id            Int      @id @default(autoincrement())
+  applicationId String?  @db.VarChar(50)
+  action        String   @db.VarChar(50) // FORM_SUBMITTED, STATUS_CHANGED, etc.
+  details       Json?    // Store action details
+  timestamp     DateTime @default(now())
+  ipAddress     String?  @db.VarChar(45)
+  userAgent     String?  @db.Text
+
+  // Relations
+  formSubmission FormSubmission? @relation(fields: [applicationId], references: [applicationId])
+
+  @@index([applicationId])
+  @@index([action])
+  @@index([timestamp])
+  @@map("audit_logs")
+}
+
+// User Sessions table (for future authentication features)
+model UserSession {
+  id        Int      @id @default(autoincrement())
+  sessionId String   @unique @db.VarChar(255)
+  aadhaar   String?  @db.VarChar(12)
+  mobile    String?  @db.VarChar(10)
+  data      Json?    // Store session data
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([sessionId])
+  @@index([aadhaar])
+  @@index([expiresAt])
+  @@map("user_sessions")
+}
+
+// Configuration table for storing application settings
+model Configuration {
+  id          Int      @id @default(autoincrement())
+  key         String   @unique @db.VarChar(100)
+  value       String   @db.Text
+  description String?  @db.Text
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([key])
+  @@index([isActive])
+  @@map("configurations")
+}
+
+// Rate Limiting table for API rate limiting
+model RateLimit {
+  id         Int      @id @default(autoincrement())
+  identifier String   @db.VarChar(255) // IP address, user ID, etc.
+  endpoint   String   @db.VarChar(100)
+  requests   Int      @default(1)
+  windowStart DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([identifier, endpoint, windowStart])
+  @@index([identifier])
+  @@index([endpoint])
+  @@index([windowStart])
+  @@map("rate_limits")
+}

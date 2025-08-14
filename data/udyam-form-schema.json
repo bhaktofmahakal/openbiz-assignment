@@ -1,0 +1,218 @@
+{
+  "step1": {
+    "title": "Aadhaar + OTP Validation",
+    "fields": [
+      {
+        "id": "ctl00_ContentPlaceHolder1_txtadharno",
+        "name": "ctl00$ContentPlaceHolder1$txtadharno",
+        "type": "text",
+        "placeholder": "Your Aadhaar No",
+        "required": false,
+        "maxLength": 12,
+        "pattern": "",
+        "className": "form-control",
+        "value": "",
+        "label": "1. Aadhaar Number/ आधार संख्या"
+      },
+      {
+        "id": "ctl00_ContentPlaceHolder1_txtownername",
+        "name": "ctl00$ContentPlaceHolder1$txtownername",
+        "type": "text",
+        "placeholder": "Name as per Aadhaar",
+        "required": false,
+        "maxLength": 100,
+        "pattern": "",
+        "className": "form-control",
+        "value": "",
+        "label": "2. Name of Entrepreneur / उद्यमी का नाम"
+      },
+      {
+        "id": "ctl00_ContentPlaceHolder1_btnValidateAadhaar",
+        "name": "ctl00$ContentPlaceHolder1$btnValidateAadhaar",
+        "type": "submit",
+        "placeholder": "",
+        "required": false,
+        "maxLength": -1,
+        "pattern": "",
+        "className": "btn btn-primary",
+        "value": "Validate & Generate OTP"
+      }
+    ],
+    "validationRules": {
+      "aadhaar": {
+        "pattern": "^[0-9]{12}$",
+        "message": "Aadhaar number must be 12 digits",
+        "required": true
+      },
+      "mobile": {
+        "pattern": "^[6-9][0-9]{9}$",
+        "message": "Mobile number must be 10 digits starting with 6-9",
+        "required": true
+      },
+      "otp": {
+        "pattern": "^[0-9]{6}$",
+        "message": "OTP must be 6 digits",
+        "required": true
+      }
+    },
+    "uiComponents": [
+      {
+        "type": "button",
+        "text": "",
+        "className": "mobile-nav-toggle d-lg-none",
+        "id": ""
+      },
+      {
+        "type": "button",
+        "text": "Validate & Generate OTP",
+        "className": "btn btn-primary",
+        "id": "ctl00_ContentPlaceHolder1_btnValidateAadhaar"
+      },
+      {
+        "type": "button",
+        "text": "",
+        "className": "uwaw-close",
+        "id": ""
+      },
+      {
+        "type": "button",
+        "text": "Text To Speech",
+        "className": "uwaw-features__item__i",
+        "id": "speak"
+      },
+      {
+        "type": "button",
+        "text": "Bigger Text",
+        "className": "uwaw-features__item__i",
+        "id": "btn-s9"
+      },
+      {
+        "type": "button",
+        "text": "Text Spacing",
+        "className": "uwaw-features__item__i",
+        "id": "btn-s13"
+      },
+      {
+        "type": "button",
+        "text": "Line Height",
+        "className": "uwaw-features__item__i",
+        "id": "btn-s12"
+      },
+      {
+        "type": "button",
+        "text": "Highlight Links",
+        "className": "uwaw-features__item__i",
+        "id": "btn-s10"
+      },
+      {
+        "type": "button",
+        "text": "Dyslexia Friendly",
+        "className": "uwaw-features__item__i",
+        "id": "btn-df"
+      },
+      {
+        "type": "button",
+        "text": "Hide Images",
+        "className": "uwaw-features__item__i",
+        "id": "btn-s11"
+      },
+      {
+        "type": "button",
+        "text": "Cursor",
+        "className": "uwaw-features__item__i",
+        "id": "btn-cursor"
+      },
+      {
+        "type": "button",
+        "text": "Light-Dark",
+        "className": "uwaw-features__item__i",
+        "id": "dark-btn"
+      },
+      {
+        "type": "button",
+        "text": "Invert Colors",
+        "className": "uwaw-features__item__i",
+        "id": "btn-invert"
+      },
+      {
+        "type": "button",
+        "text": "Reset All Settings",
+        "className": "btn-reset-all",
+        "id": "reset-all"
+      },
+      {
+        "type": "button",
+        "text": "Accessibility Options",
+        "className": "uw-widget-custom-trigger",
+        "id": "uw-widget-custom-trigger"
+      }
+    ]
+  },
+  "step2": {
+    "title": "PAN Validation",
+    "fields": [
+      {
+        "id": "pan_number",
+        "name": "pan",
+        "type": "text",
+        "label": "PAN Number",
+        "placeholder": "Enter 10-character PAN number",
+        "required": true,
+        "maxLength": 10,
+        "pattern": "^[A-Z]{5}[0-9]{4}[A-Z]{1}$"
+      },
+      {
+        "id": "pan_holder_name",
+        "name": "panHolderName",
+        "type": "text",
+        "label": "Name as per PAN",
+        "placeholder": "Enter name as mentioned in PAN card",
+        "required": true,
+        "maxLength": 100
+      },
+      {
+        "id": "date_of_birth",
+        "name": "dateOfBirth",
+        "type": "date",
+        "label": "Date of Birth",
+        "required": true
+      }
+    ],
+    "validationRules": {
+      "pan": {
+        "pattern": "^[A-Z]{5}[0-9]{4}[A-Z]{1}$",
+        "message": "PAN must be in format: ABCDE1234F (5 letters, 4 numbers, 1 letter)",
+        "required": true
+      },
+      "panHolderName": {
+        "pattern": "^[a-zA-Z\\s]{2,100}$",
+        "message": "Name must contain only letters and spaces (2-100 characters)",
+        "required": true
+      },
+      "dateOfBirth": {
+        "required": true,
+        "message": "Date of birth is required"
+      }
+    },
+    "uiComponents": [
+      {
+        "type": "button",
+        "text": "Verify PAN",
+        "className": "btn btn-primary",
+        "id": "verify_pan_btn"
+      },
+      {
+        "type": "button",
+        "text": "Previous",
+        "className": "btn btn-secondary",
+        "id": "prev_step_btn"
+      },
+      {
+        "type": "button",
+        "text": "Submit",
+        "className": "btn btn-success",
+        "id": "submit_form_btn"
+      }
+    ]
+  }
+}
